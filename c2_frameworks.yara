@@ -4762,7 +4762,7 @@ rule INDICATOR_TOOL_Sliver
 }
 
 /*
-* from https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/
+	from https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/
 */
 
 rule brc4_badger_strings
@@ -4789,7 +4789,7 @@ rule brc4_badger_strings_2
 }
 
 /*
-* Based on an online yara found to detect pipes linked to CS jobs
+	Based on an online yara found to detect pipes linked to CS jobs
 */
 rule cs_job_pipe 
 {
@@ -4805,10 +4805,10 @@ rule cs_job_pipe
 }
 
 /*
-*  Detects Cobalt Strike sleepmask in memory
-*  from various sources:
-*  - https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/
-*  - https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures
+	Detects Cobalt Strike sleepmask in memory
+	from various sources:
+	- https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/
+	- https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures
 */
 rule CobaltStrike_sleepmask 
 {
