@@ -4761,6 +4761,10 @@ rule INDICATOR_TOOL_Sliver
     (uint16(0) == 0x5a4d or uint16(0)== 0x457f or uint16(0) == 0xfacf) and (1 of ($x*) or 5 of ($s*) )
 }
 
+/*
+* from https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/
+*/
+
 rule brc4_badger_strings
 {
 	meta:
@@ -4784,3 +4788,48 @@ rule brc4_badger_strings_2
 	  $a
 }
 
+/*
+* Based on an online yara found to detect pipes linked to CS jobs
+*/
+rule cs_job_pipe 
+{
+	meta:
+	  description = "Detects CobaltStrike Post Exploitation Named Pipes"
+	  author = "Riccardo Ancarani & Jon Cave"
+	  date = "2020-10-04"
+	strings:
+	  $pipe = /\\\\\.\\pipe\\[0-9a-f]{7,10}/ ascii wide fullword
+	  $guidPipe = /\\\\\.\\pipe\\[0-9a-f]{8}\-/ ascii wide
+	condition:
+	  $pipe and not ($guidPipe)
+}
+
+/*
+*  Detects Cobalt Strike sleepmask in memory
+*  from various sources:
+*  - https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/
+*  - https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures
+*/
+rule CobaltStrike_sleepmask 
+{
+	meta:
+  	  description = "Static bytes in Cobalt Strike 4.5 sleep mask function that are not obfuscated"
+	  author = "CodeX"
+	  date = "2022-07-04"
+	strings:
+	  $sleep_mask = {48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 45 33 DB 45 33 D2 33 FF 33 F6 48 8B E9 BB 03 00 00 00 85 D2 0F 84 81 00 00 00 0F B6 45 }
+	condition:
+	  $sleep_mask
+}
+        
+rule cobaltstrike_beacon_4_2_decrypt 
+{
+    	meta:
+	  author = "Elastic"
+	  description = "Identifies deobfuscation routine used in Cobalt Strike Beacon DLL version 4.2."
+    	strings:
+	  $a_x64 = {4C 8B 53 08 45 8B 0A 45 8B 5A 04 4D 8D 52 08 45 85 C9 75 05 45 85 DB 74 33 45 3B CB 73 E6 49 8B F9 4C 8B 03}
+	  $a_x86 = {8B 46 04 8B 08 8B 50 04 83 C0 08 89 55 08 89 45 0C 85 C9 75 04 85 D2 74 23 3B CA 73 E6 8B 06 8D 3C 08 33 D2}
+    	condition:
+	  any of them
+}
